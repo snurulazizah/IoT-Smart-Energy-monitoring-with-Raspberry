@@ -1,0 +1,108 @@
+#include <EmonLib.h>// Include Emon Library
+#include "Wire.h"
+#include "TimeLib.h"
+
+
+EnergyMonitor emon1;
+float Vrms;
+float Irms;
+char dataString[50] = {0};
+float CurSample[4]= {0,0,0,0};
+float VolSample[4]= {0,0,0,0};
+int counter=1;
+float averegeIrms, averegeVrms;
+unsigned long lastSample=0;
+
+
+void setup()
+{
+  Serial.begin(9600);
+  emon1.voltage (2, 4396.2, 1.7);
+  emon1.current (1, 57.6);
+
+}
+
+void loop()
+{
+unsigned long curentmills=millis();
+if (curentmills-lastSample>=900000)
+{lastSample=curentmills;
+  Irms = emon1.calcIrms(1185);
+  emon1.calcVI(20, 2000);
+  Vrms = emon1.Vrms;
+  Vrms = emon1.Vrms;
+  if (Vrms < 0.5
+     ) {
+    Vrms = 0;
+  }
+  if (Irms < 0.01) {
+    Irms = 0;
+  }
+  switch(counter)
+  { 
+  case 1:
+  {
+  CurSample[0]=Irms;
+  VolSample[0]=Vrms;
+  break;
+  }
+  case 2 :
+  {
+  CurSample[1]=Irms;
+  VolSample[1]=Vrms;
+  break;
+  }
+  case 3:
+  {
+  CurSample[2]=Irms;
+  VolSample[2]=Vrms;
+  break;
+  }
+  case 4:
+  {
+  CurSample[3]=Irms;
+  VolSample[3]=Vrms;
+  break;
+  }
+  }
+   float CurSampleMo= ( CurSample[0] +  CurSample[1] + CurSample[2] + CurSample[3]) /counter;
+    Serial.print("CurSampleMo = ");
+    Serial.println(CurSampleMo);
+    
+     float VolSampleMo= ( VolSample[0] +  VolSample[1] + VolSample[2] + VolSample[3]) /counter;
+    Serial.print("VolSampleMo = ");
+    Serial.println(VolSampleMo);
+   
+    averegeIrms = CurSampleMo ;
+    
+    averegeVrms = CurSampleMo ;
+     
+     
+     counter++;
+    if (counter>4)
+    {
+      counter=1;
+      for (int i=0; i<4; i++)
+      {
+
+        
+      CurSample[i] = 0;
+      
+      VolSample[i] = 0;
+        
+      }
+    
+    }
+  }
+    
+  Serial.print("Voltage: ");
+  Serial.print(averegeVrms );
+  Serial.print("\t");
+  Serial.print("Current: ");
+  Serial.print( averegeVrms);
+  Serial.print("\t");
+  Serial.print("Power: ");
+  Serial.print( averegeVrms *  averegeIrms);
+  Serial.print("\n");
+  }
+}
