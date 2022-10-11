@@ -14,7 +14,7 @@ import csv
 # Create an ADS1115 ADC (16-bit) instance..
 adc1 = Adafruit_ADS1x15.ADS1115()
 username = 'nurul_azizah'
-AIO_KEY = 'aio_IsAq50rsjA85x3OxyLbHulFDEVwC' 
+AIO_KEY = 'key' 
 aio = Client(username, AIO_KEY)
 GAIN = 1         # see ads1015/1115 documentation for potential values.
 samples = 200     # number of samples taken from ads1115
