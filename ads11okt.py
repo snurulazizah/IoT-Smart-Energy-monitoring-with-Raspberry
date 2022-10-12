@@ -9,6 +9,8 @@ from firebase import firebase
 import pyrebase
 import pandas as pd
 import csv
+import digitalio
+import board
 
 
 # Create an ADS1115 ADC (16-bit) instance..
@@ -36,6 +38,14 @@ try:
     # firebase = firebase.FirebaseApplication('https://nurulapp-22175-default-rtdb.firebaseio.com/', None)
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(relay, GPIO.OUT)
+    try:
+        saklar = aio.feeds('saklar')
+    except RequestError: # create a digital feed
+        feed = Feed(name="saklar")
+        digital = aio.create_feed(feed)
+    device = digitalio.DigitalInOut(board.D23)
+    device.direction = digitalio.Direction.OUTPUT
+    
     while True:
         GPIO.output(relay, GPIO.HIGH) 
         count = int(0)
@@ -115,7 +125,13 @@ try:
             print('terjadi masalah')
             GPIO.output(relay,GPIO.LOW)
             GPIO.cleanup()
-                                                        
+            
+        data = aio.receive(digital.key)
+        if int(data.value) == 1:
+            print('received <- ON\n')
+            elif int(data.value) == 0:
+                print('received <- OFF\n')
+                                                 
         
 except KeyboardInterrupt: 
     GPIO.cleanup()
