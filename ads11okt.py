@@ -11,7 +11,7 @@ import pandas as pd
 import csv
 import digitalio
 import board
-
+from Adafruit_IO import Client, Feed, RequestError
 
 # Create an ADS1115 ADC (16-bit) instance..
 adc1 = Adafruit_ADS1x15.ADS1115()
