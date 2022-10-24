@@ -33,7 +33,13 @@ relay= [23] #16
 
 GPIO.setmode(GPIO.BCM)       
 GPIO.setup(relay, GPIO.OUT)
-    
+try:
+        saklar = aio.feeds('saklar')
+    except RequestError: # create a digital feed
+        feed = Feed(name="saklar")
+        digital = aio.create_feed(feed)
+    device = digitalio.DigitalInOut(board.D23)
+    device.direction = digitalio.Direction.OUTPUT    
 try:
     # firebase = firebase.FirebaseApplication('https://nurulapp-22175-default-rtdb.firebaseio.com/', None)
     GPIO.setmode(GPIO.BCM)
