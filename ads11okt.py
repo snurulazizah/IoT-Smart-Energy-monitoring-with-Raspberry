@@ -35,7 +35,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(relay, GPIO.OUT)
 try:
         saklar = aio.feeds('saklar')
-    except RequestError: # create a digital feed
+        except RequestError: # create a digital feed
         feed = Feed(name="saklar")
         digital = aio.create_feed(feed)
     device = digitalio.DigitalInOut(board.D23)
