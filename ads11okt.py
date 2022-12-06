@@ -131,7 +131,14 @@ try:
             print('terjadi masalah')
             GPIO.output(relay,GPIO.LOW)
             GPIO.cleanup()
-            
+        elif voltsA1 < float (215):
+            print('terjadi masalah')
+            GPIO.output(relay,GPIO.LOW)
+            GPIO.cleanup()
+        else :
+            GPIO.output(relay,GPIO.LOW)
+            GPIO.cleanup()
+                
         data = aio.receive(digital.key)
         if int(data.value) == 1:
             print('received <- ON\n')
